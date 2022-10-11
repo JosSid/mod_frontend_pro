@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/KeepCodingWeb13/frontend-pro/issues"
   },
-  "homepage": "https://github.com/KeepCodingWeb13/frontend-pro#readme"
+  "homepage": "https://github.com/KeepCodingWeb13/frontend-pro#readme",
+  "dependencies": {
+    "json-server": "^0.17.0",
+    "servor": "^4.0.2"
+  }
 }

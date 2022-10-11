@@ -1,4 +1,23 @@
-//TODO: #1 implementar api (getGames(), getGameById()). Mirar en la documentación de json-server
+//DONE: #1 implementar api (getGames(), getGameById()). Mirar en la documentación de json-server
+
+const apiEndpoint = 'http://localhost:3033'
+const getGames =  async () => {
+    const response = await fetch(`${apiEndpoint}/games`);
+
+    return response.json();
+};
+
+const getGameById = async (gameId) => {
+  const response = await fetch(`${apiEndpoint}/games/${gameId}`);
+
+  return response.json();
+};
+
+const getCommentsOfGame = async (gameId) => {
+  const response = await fetch(`${apiEndpoint}/games/${gameId}/comments?_expand=user`);
+  return response.json()
+}
+
 async function drawListGames() {
     let games = await getGames();
     document.getElementById('games')
@@ -14,7 +33,8 @@ async function drawListGames() {
 async function drawGame(gameId) {
   let game = await getGameById(gameId);
   document.getElementById('game-name-title').innerHTML = game.name;
-  // TODO: #5 breadcrumb???? Let's use jQuery!!
+  // DONE: #5 breadcrumb???? Let's use jQuery!!
+  $('.breadcrumb span').html(`Game ${game.name}`)
   document.getElementById('game-image').src = game.image;
   document.getElementById('game-image').alt = game.name;
 
@@ -28,7 +48,7 @@ async function drawGame(gameId) {
 
 }
 
-// TODO: #2 Pedir ayuda para generateCommentSnippet
+// DONE: #2 Pedir ayuda para generateCommentSnippet
 async function drawComments(gameId) {
   console.log(gameId)
   let comments = await getCommentsOfGame(gameId);
@@ -42,7 +62,39 @@ async function drawComments(gameId) {
   }
 }
 
-// TODO: #4 Dar más información que una lista (imagen, nombre, primeros 100 caracteres de summary)
+// DONE: #4 Dar más información que una lista (imagen, nombre, primeros 100 caracteres de summary)
 function generateGameSnippet(game) {
-  return `<a href="/detail.html?id=${game.id}">${game.name}</a>`;
+  return `
+  <div class="game_snippet">
+    <a href="/detail.html?id=${game.id}">
+      <div class="game-image-container">
+       <img class="img-thumbnail" id="game-${game.id}" src="${game.image}" alt="${game.name}"/>
+      </div>
+      <h3class="game-name">${game.name}</h3>
+    </a>
+  <div> 
+  `;
+}
+
+function generateCommentSnippet(comment) {
+  return `
+  <div class="row">
+  <div class="col col-2">
+    <div class="image-container text-right">
+      <img class="avatar rounded" src="${comment.user.image}" alt="${comment.user.name}" />
+    </div>
+  </div>
+  <div class="col col-10">
+    <div class="user-name-container">
+      <h4 class="text-muted">${comment.user.name}</h4>
+    </div>
+    <div class="comment-body-container">
+      ${comment.body}
+    </div>
+    <div class="date-container">
+      Comment date: <b>${comment.commentDate}</b>
+    </div>
+  </div>
+</div>
+  `;
 }
